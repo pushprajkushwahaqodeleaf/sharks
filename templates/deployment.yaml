@@ -1,0 +1,24 @@
+{{- if .Values.deployment.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name}}
+  labels:
+    {{- include "labels" . | indent 3}}
+spec:
+  replicas: {{ .Values.deployment.replica}}
+  selector:
+    matchLabels:
+      {{- include "labels" . | indent 5}}
+  template:
+    metadata:
+      labels:
+        {{- include "labels" . | indent 7}}
+    spec:
+      nodeName: kind-for-assigment-control-plane
+      containers:
+      - name: {{ .Values.deployment.container.name }}
+        image: {{ .Values.image.name }}:{{.Values.image.tag}}
+        ports:
+        - containerPort: {{ .Values.deployment.container.port}}
+{{- end}}
